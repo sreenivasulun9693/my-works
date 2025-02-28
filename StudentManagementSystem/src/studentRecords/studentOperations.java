@@ -9,7 +9,12 @@ import java.sql.Statement;
 import java.util.Scanner;
 
 public class studentOperations {
+	
 	public static void add(student student) {
+		 
+		if (!validation(student.getName(), student.getAge(), student.getGrade())) {
+            return;
+        }
 		String query="insert into students (name,age,grade) values(?,?,?)";
 		try {
 			Connection con=databaseConnection.connect();
@@ -111,5 +116,26 @@ public class studentOperations {
 			System.out.println("Error searching student!");
 			e.printStackTrace();
 		}
+	}
+	public static boolean validation(String name,int age ,String grade) {
+		if(name==null||name.trim().isEmpty()) {
+			System.out.println("Error: Name cannot be empty!");
+			return false;
+		}
+		
+		try {
+			if(age<=0) {
+				System.out.println("Error: Age must be positive!");
+				return false;
+			}
+		}catch(NumberFormatException e) {
+			System.out.println("Error: Age must be number!");
+			
+		}
+		if(!grade.matches("[A-D]|F")) {
+			System.out.println("Error: Grade must be A, B, C, D of F!");
+			return false;
+		}
+		return true;
 	}
 }
